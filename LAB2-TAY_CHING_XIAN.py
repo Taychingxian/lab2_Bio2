@@ -7,7 +7,7 @@ Description: A Streamlit application that displays protein structural informatio
 
 import streamlit as st
 import py3Dmol
-from stmol import showmol
+import streamlit.components.v1 as components
 from Bio.PDB import PDBParser, Structure, PDBIO
 from Bio.PDB.PDBList import PDBList
 import numpy as np
@@ -204,8 +204,9 @@ def main():
                             
                             with col2:
                                 st.subheader("🧪 3D Structure Visualization")
-                                # Display 3D view
-                                showmol(info['3dview'], height=600, width=800)
+                                # Display 3D view using HTML component
+                                view_html = info['3dview']._make_html()
+                                components.html(view_html, height=600, width=800, scrolling=False)
                                 
                                 st.info("""
                                 **Interaction Tips:**
