@@ -99,7 +99,7 @@ def get_structure_info(prot_structure):
         view = py3Dmol.view(width=800, height=600)
         view.addModel(pdb_string, 'pdb')
         view.setStyle({'cartoon': {'color': 'spectrum'}})
-        view.setBackgroundColor('white')
+        view.setBackgroundColor('#f0f4f8')  # Soft gray-blue background
         view.zoomTo()
         
         # Store the model data for later use
@@ -256,45 +256,8 @@ def main():
                             with col2:
                                 st.subheader("🔬 3D Structure Visualization")
                                 
-                                # Visualization style options
-                                st.markdown("**Visualization Style:**")
-                                viz_col1, viz_col2, viz_col3 = st.columns(3)
-                                
-                                with viz_col1:
-                                    if st.button("🎨 Cartoon", use_container_width=True):
-                                        view = py3Dmol.view(width=800, height=500)
-                                        view.addModel(info['3dview']._model_data, 'pdb')
-                                        view.setStyle({'cartoon': {'color': 'spectrum'}})
-                                        view.setBackgroundColor('white')
-                                        view.zoomTo()
-                                        st.session_state['current_view'] = view
-                                
-                                with viz_col2:
-                                    if st.button("⚛️ Stick", use_container_width=True):
-                                        view = py3Dmol.view(width=800, height=500)
-                                        view.addModel(info['3dview']._model_data, 'pdb')
-                                        view.setStyle({'stick': {'colorscheme': 'Jmol'}})
-                                        view.setBackgroundColor('white')
-                                        view.zoomTo()
-                                        st.session_state['current_view'] = view
-                                
-                                with viz_col3:
-                                    if st.button("🌐 Surface", use_container_width=True):
-                                        view = py3Dmol.view(width=800, height=500)
-                                        view.addModel(info['3dview']._model_data, 'pdb')
-                                        view.setStyle({'cartoon': {'color': 'spectrum'}})
-                                        view.addSurface(py3Dmol.VDW, {'opacity': 0.7, 'color': 'white'})
-                                        view.setBackgroundColor('white')
-                                        view.zoomTo()
-                                        st.session_state['current_view'] = view
-                                
-                                st.markdown("---")
-                                
                                 # Display 3D view
-                                if 'current_view' in st.session_state:
-                                    view_html = st.session_state['current_view']._make_html()
-                                else:
-                                    view_html = info['3dview']._make_html()
+                                view_html = info['3dview']._make_html()
                                 
                                 # Container with border
                                 st.markdown("""
