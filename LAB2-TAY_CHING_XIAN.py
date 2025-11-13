@@ -99,7 +99,7 @@ def get_structure_info(prot_structure):
         view = py3Dmol.view(width=800, height=600)
         view.addModel(pdb_string, 'pdb')
         view.setStyle({'cartoon': {'color': 'spectrum'}})
-        view.setBackgroundColor('#f0f4f8')  # Soft gray-blue background
+        view.setBackgroundColor('#1e293b')  # Dark slate background
         view.zoomTo()
         
         # Store the model data for later use
