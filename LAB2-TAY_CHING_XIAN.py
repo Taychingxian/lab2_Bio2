@@ -198,6 +198,10 @@ def main():
     # Process button
     analyze_button = st.sidebar.button("🔬 Analyze Protein", type="primary", use_container_width=True)
     
+    # Clear button
+    if st.sidebar.button("🔄 Clear Results", use_container_width=True):
+        st.rerun()
+    
     # Footer info
     st.sidebar.markdown("---")
     st.sidebar.caption("Developed by Tay Ching Xian")
