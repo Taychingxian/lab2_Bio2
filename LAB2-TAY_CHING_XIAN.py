@@ -102,6 +102,9 @@ def get_structure_info(prot_structure):
         view.setBackgroundColor('white')
         view.zoomTo()
         
+        # Store the model data for later use
+        view._model_data = pdb_string
+        
         # Return dictionary with all information
         return {
             'com': com,
@@ -197,7 +200,7 @@ def main():
     
     # Footer info
     st.sidebar.markdown("---")
-    st.sidebar.caption("Developed by Tay Ching Xian | Bio2 Lab 2")
+    st.sidebar.caption("Developed by Tay Ching Xian")
     
     if analyze_button:
         if len(pdb_id) == 4:
@@ -251,18 +254,98 @@ def main():
                                 st.info(f"**PDB ID:** {pdb_id}")
                             
                             with col2:
-                                st.subheader("🔬 3D Structure")
+                                st.subheader("🔬 3D Structure Visualization")
+                                
+                                # Visualization style options
+                                st.markdown("**Visualization Style:**")
+                                viz_col1, viz_col2, viz_col3 = st.columns(3)
+                                
+                                with viz_col1:
+                                    if st.button("🎨 Cartoon", use_container_width=True):
+                                        view = py3Dmol.view(width=800, height=500)
+                                        view.addModel(info['3dview']._model_data, 'pdb')
+                                        view.setStyle({'cartoon': {'color': 'spectrum'}})
+                                        view.setBackgroundColor('white')
+                                        view.zoomTo()
+                                        st.session_state['current_view'] = view
+                                
+                                with viz_col2:
+                                    if st.button("⚛️ Stick", use_container_width=True):
+                                        view = py3Dmol.view(width=800, height=500)
+                                        view.addModel(info['3dview']._model_data, 'pdb')
+                                        view.setStyle({'stick': {'colorscheme': 'Jmol'}})
+                                        view.setBackgroundColor('white')
+                                        view.zoomTo()
+                                        st.session_state['current_view'] = view
+                                
+                                with viz_col3:
+                                    if st.button("🌐 Surface", use_container_width=True):
+                                        view = py3Dmol.view(width=800, height=500)
+                                        view.addModel(info['3dview']._model_data, 'pdb')
+                                        view.setStyle({'cartoon': {'color': 'spectrum'}})
+                                        view.addSurface(py3Dmol.VDW, {'opacity': 0.7, 'color': 'white'})
+                                        view.setBackgroundColor('white')
+                                        view.zoomTo()
+                                        st.session_state['current_view'] = view
+                                
+                                st.markdown("---")
                                 
                                 # Display 3D view
-                                view_html = info['3dview']._make_html()
-                                components.html(view_html, height=500, scrolling=False)
+                                if 'current_view' in st.session_state:
+                                    view_html = st.session_state['current_view']._make_html()
+                                else:
+                                    view_html = info['3dview']._make_html()
                                 
-                                st.info("""
-                                **💡 Controls:**
-                                - 🖱️ **Rotate:** Click and drag
-                                - 🔍 **Zoom:** Scroll wheel
-                                - ↔️ **Pan:** Right-click and drag
-                                """)
+                                # Container with border
+                                st.markdown("""
+                                    <div style='border: 2px solid #e2e8f0; border-radius: 10px; 
+                                                padding: 10px; background-color: #f8fafc;'>
+                                """, unsafe_allow_html=True)
+                                
+                                components.html(view_html, height=520, scrolling=False)
+                                
+                                st.markdown("</div>", unsafe_allow_html=True)
+                                
+                                # Enhanced controls info
+                                st.markdown("<br>", unsafe_allow_html=True)
+                                
+                                control_col1, control_col2 = st.columns(2)
+                                
+                                with control_col1:
+                                    st.markdown("""
+                                        <div style='background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); 
+                                                    color: white; padding: 15px; border-radius: 8px;'>
+                                            <strong>🖱️ Mouse Controls</strong>
+                                            <ul style='margin: 10px 0 0 0; padding-left: 20px; font-size: 14px;'>
+                                                <li>Left Click + Drag: Rotate</li>
+                                                <li>Right Click + Drag: Pan</li>
+                                                <li>Scroll Wheel: Zoom</li>
+                                            </ul>
+                                        </div>
+                                    """, unsafe_allow_html=True)
+                                
+                                with control_col2:
+                                    st.markdown("""
+                                        <div style='background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); 
+                                                    color: white; padding: 15px; border-radius: 8px;'>
+                                            <strong>ℹ️ View Options</strong>
+                                            <ul style='margin: 10px 0 0 0; padding-left: 20px; font-size: 14px;'>
+                                                <li>Cartoon: Secondary structure</li>
+                                                <li>Stick: Atomic bonds</li>
+                                                <li>Surface: Molecular surface</li>
+                                            </ul>
+                                        </div>
+                                    """, unsafe_allow_html=True)
+                                
+                                # Download button for PDB file
+                                st.markdown("<br>", unsafe_allow_html=True)
+                                st.download_button(
+                                    label="📥 Download PDB File",
+                                    data=info['3dview']._model_data,
+                                    file_name=f"{pdb_id}.pdb",
+                                    mime="chemical/x-pdb",
+                                    use_container_width=True
+                                )
                 else:
                     st.error(f"❌ Could not retrieve structure for {pdb_id}. Please check the PDB ID.")
         else:
