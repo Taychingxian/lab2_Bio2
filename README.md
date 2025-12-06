@@ -1,8 +1,6 @@
 # lab2_Bio2
 # 🧬 Protein Structure Viewer
 
-**Author:** Tay Ching Xian
-
 ## 📖 Description
 This **Protein Structure Viewer** is an interactive web application built with [Streamlit](https://streamlit.io/). It allows users to retrieve biological macromolecular structures directly from the **RCSB Protein Data Bank (PDB)**, visualize them in 3D, and calculate key structural properties in real-time.
 
